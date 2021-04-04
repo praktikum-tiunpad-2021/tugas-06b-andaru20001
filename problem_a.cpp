@@ -4,31 +4,31 @@ using namespace strukdat::stack;
 
 template <typename T>
 int getMax(Stack<T> Top) {
-    pointer<T> dump;
+    int result = 0;
+    pointer<T> dump = nullptr;
     if (isEmpty(Top)){
-        return 0;
+        result = 0;
     }
     else{
         int max = 0;
         while(!(isEmpty(Top))){
-            if (max > peek(Top)){
+            if (max < peek(Top)){
                 max = peek(Top);
             }
-            
             pop(Top, dump);
+            delete dump;
         }
-        return max;
+        result = max;
     }
-    
+    return result;
 }
 
 //Membuat fungsi-fungsi untuk mempermudah pengerjaan fungsi getEqualStack
 template <typename T>
 int sumElement(Stack<T> Top){
-    pointer<T> temp = Top->next;
+    pointer<T> temp = Top;
     int sum = 0;
-    while (temp != nullptr)
-    {
+    while (temp != nullptr){
         sum += temp->data;
         temp = temp->next;
     }
@@ -38,11 +38,12 @@ int sumElement(Stack<T> Top){
 template <typename T>
 int getEqualStack(Stack<T> Top1, Stack<T> Top2, Stack<T> Top3)
 {
+    int result = 0;
     if (isEmpty(Top1) || isEmpty(Top2) || isEmpty(Top3)){
-        return 0;
+        result = 0;
     }
     else{
-        pointer<T> delTop;
+        pointer<T> delTop = nullptr;
         int sum1 = 0;
         int sum2 = 0;
         int sum3 = 0;
@@ -53,7 +54,7 @@ int getEqualStack(Stack<T> Top1, Stack<T> Top2, Stack<T> Top3)
             sum1 = sumElement(Top1);
             sum2 = sumElement(Top2);
             sum3 = sumElement(Top3);
-        
+            
             if (sum1 > sum2){
                 if (sum1 > sum3){
                     max = 1;
@@ -74,72 +75,83 @@ int getEqualStack(Stack<T> Top1, Stack<T> Top2, Stack<T> Top3)
             switch(max){
                 case 1:
                     pop(Top1, delTop);
-                    sum1 -= delTop->data;
+                    delete delTop;
                     break;
                 case 2:
                     pop(Top2, delTop);
-                    sum2 -= delTop->data;
+                    delete delTop;
                     break;
                 case 3:
                     pop(Top3, delTop);
-                    sum3 -= delTop->data;
+                    delete delTop;
                     break;
             }
 
             if (sum1 == sum2 && sum2 == sum3){
-                break;
+                equal = 1;
+                result = sum1;
             }
         }
-
-        return sum1;
     }
+
+    return result;
 }
 
-template <typename T>
 bool isBracketBalanced(std::string expression)
 {
-    Stack<T> stringElement;
-    pointer<T> dump;
+    pointer<char> newElement = nullptr;
+    Stack<char> stringElement = nullptr;
+    pointer<char> dump = nullptr;
     createStack(stringElement);
-    for (int i=expression.length(); i>=0; i--){
-        pointer<T> newElement;
+    int length = expression.length();
+    
+    for (int i=length-1; i>=0; i--){
         createElement(newElement, expression[i]);
-        push(stringElement, newElement);
+        stringElement = push(stringElement, newElement);
+        std::cout << i;
     }
+
+    bool check = true;
 
     if (isEmpty(stringElement)){
-        return false;
+        check = false;
     }
     else{
-        bool check = true;
-        int bracketCheck = 0;
-        int bracketCheck2 = 0;
-        int last = 0;
+        char bracketCheck, bracketCheck2;
+        pointer<char> last;
 
-        while(!(isEmpty(stringElement))){
-            bracketCheck = peek(stringElement);
-            switch(bracketCheck){
-                case 40:
-                    bracketCheck2 = 41;
-                    break;
-                case 91:
-                    bracketCheck2 = 93;
-                    break;
-                case 123:
-                    bracketCheck2 = 125;
-                    break;
-            }
+        if (length % 2 == 1){
+            check = false;
+        }
+        else{
+            for (int i=0; i<(length / 2); i++){
+                bracketCheck = peek(stringElement);
+                switch(bracketCheck){
+                    case '(':
+                        bracketCheck2 = ')';
+                        break;
+                    case '[':
+                        bracketCheck2 = ']';
+                        break;
+                    case '{':
+                        bracketCheck2 = '}';
+                        break;
+                }
 
-            last = lastNode(stringElement);
-            if (last != bracketCheck2){
-                check = false;
-                break;
-            }
-            else{
-                pop(stringElement, dump);
+                last = lastNode(stringElement);
+                if (last->data != bracketCheck2){
+                    check = false;
+                    delete stringElement;
+                    break;
+                }
+                else{
+                    pop(stringElement, dump);
+                    delete dump;
+                    delete last;
+                }
             }
         }
-
-        return check;
     }
+
+    return check;
 }

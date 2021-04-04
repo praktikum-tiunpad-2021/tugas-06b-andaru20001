@@ -12,5 +12,5 @@ using namespace strukdat::stack;
 
 int main(int argc, char const *argv[])
 {
-  return 0;
+  bool a = isBracketBalanced("{[()]}");
 }

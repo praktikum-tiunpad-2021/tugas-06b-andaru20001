@@ -33,8 +33,7 @@ Stack<T> Top;
  */
 template <typename T>
 Stack<T> createStack(Stack<T> Top) {
-  Top = new Node<T>;
-  Top->next = nullptr;
+  Top = nullptr;
   return Top;
 }
 
@@ -58,7 +57,7 @@ void createElement(pointer<T>& newElement, T data) {
  */
 template <typename T>
 T peek(Stack<T> Top) {
-  return Top->next->data;
+  return Top->data;
 }
 
 /**
@@ -69,7 +68,7 @@ T peek(Stack<T> Top) {
  */
 template <typename T>
 bool isEmpty(Stack<T> Top) {
-  if (Top->next == nullptr){
+  if (Top == nullptr){
     return true;
   }
   else{
@@ -86,12 +85,12 @@ bool isEmpty(Stack<T> Top) {
  */
 template <typename T>
 Stack<T> push(Stack<T> Top, pointer<T> newElement) {
-  if (Top->next == nullptr){
-    Top->next = newElement;
+  if (Top == nullptr){
+    Top = newElement;
   }
   else{
-    newElement->next = Top->next;
-    Top->next = newElement;
+    newElement->next = Top;
+    Top = newElement;
   }
   return Top;
 }
@@ -105,8 +104,9 @@ Stack<T> push(Stack<T> Top, pointer<T> newElement) {
  */
 template <typename T>
 Stack<T> pop(Stack<T>& Top, pointer<T> delElement) {
-  if (Top->next == nullptr){
+  if (Top == nullptr){
     delElement = nullptr;
+    Top = nullptr;
   }
   else{
     delElement = Top;
@@ -125,26 +125,28 @@ Stack<T> pop(Stack<T>& Top, pointer<T> delElement) {
  */
 template <typename T>
 Stack<T> lastNode(Stack<T> Top) {
-  if (Top->next == nullptr){
-    return nullptr;
+  pointer<T> ptrResult = nullptr;
+  if (Top == nullptr){
+    ptrResult = nullptr;
   }
   else{
     pointer<T> pHelp = Top;
     if (pHelp->next == nullptr){
-      Top->next = nullptr;
-      return pHelp;
+      Top = nullptr;
+      ptrResult = pHelp;
     }
     else{
-      pHelp = Top->next->next;
-      pointer<T> temp = Top->next;
+      pHelp = Top->next;
+      pointer<T> temp = Top;
       while (pHelp->next != nullptr){
         pHelp = pHelp->next;
         temp = temp->next;
       }
       temp->next = nullptr;
-      return pHelp;
+      ptrResult = pHelp;
     }
   }
+  return ptrResult;
 }
 
 }  // namespace stack
