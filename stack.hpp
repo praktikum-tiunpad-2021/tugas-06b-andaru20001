@@ -33,8 +33,9 @@ Stack<T> Top;
  */
 template <typename T>
 Stack<T> createStack(Stack<T> Top) {
-  // TODO: Implementasikan!
-  return nullptr;
+  Top = new Node<T>;
+  Top->next = nullptr;
+  return Top;
 }
 
 /**
@@ -44,7 +45,9 @@ Stack<T> createStack(Stack<T> Top) {
  */
 template <typename T>
 void createElement(pointer<T>& newElement, T data) {
-  // TODO: Implementasikan!
+  newElement = new Node<T>;
+  newElement->data = data;
+  newElement->next = nullptr;
 }
 
 /**
@@ -55,8 +58,7 @@ void createElement(pointer<T>& newElement, T data) {
  */
 template <typename T>
 T peek(Stack<T> Top) {
-  // TODO: Implementasikan!
-  return nullptr;
+  return Top->next->data;
 }
 
 /**
@@ -67,8 +69,12 @@ T peek(Stack<T> Top) {
  */
 template <typename T>
 bool isEmpty(Stack<T> Top) {
-  // TODO: Implementasikan!
-  return false;
+  if (Top->next == nullptr){
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 
 /**
@@ -80,7 +86,13 @@ bool isEmpty(Stack<T> Top) {
  */
 template <typename T>
 Stack<T> push(Stack<T> Top, pointer<T> newElement) {
-  // TODO: Implementasikan!
+  if (Top->next == nullptr){
+    Top->next = newElement;
+  }
+  else{
+    newElement->next = Top->next;
+    Top->next = newElement;
+  }
   return Top;
 }
 
@@ -93,7 +105,14 @@ Stack<T> push(Stack<T> Top, pointer<T> newElement) {
  */
 template <typename T>
 Stack<T> pop(Stack<T>& Top, pointer<T> delElement) {
-  // TODO: Implementasikan!  
+  if (Top->next == nullptr){
+    delElement = nullptr;
+  }
+  else{
+    delElement = Top;
+    Top = Top->next;
+    delElement->next = nullptr;
+  }
   return delElement;
 }
 
@@ -106,9 +125,26 @@ Stack<T> pop(Stack<T>& Top, pointer<T> delElement) {
  */
 template <typename T>
 Stack<T> lastNode(Stack<T> Top) {
-  pointer<T> pHelp = Top;
-  // TODO: Implementasikan!
-  return pHelp;
+  if (Top->next == nullptr){
+    return nullptr;
+  }
+  else{
+    pointer<T> pHelp = Top;
+    if (pHelp->next == nullptr){
+      Top->next = nullptr;
+      return pHelp;
+    }
+    else{
+      pHelp = Top->next->next;
+      pointer<T> temp = Top->next;
+      while (pHelp->next != nullptr){
+        pHelp = pHelp->next;
+        temp = temp->next;
+      }
+      temp->next = nullptr;
+      return pHelp;
+    }
+  }
 }
 
 }  // namespace stack
